@@ -1,4 +1,4 @@
-package main
+package emulator
 
 import (
 	"net/http"
@@ -50,7 +50,7 @@ func toRPCStatusCode(statusCode int) int32 {
 	case 499:
 		return int32(rpccode.Code_CANCELLED)
 	case 500:
-		//TODO: or rpccode.Code_DATA_LOSS
+		// TODO: or rpccode.Code_DATA_LOSS
 		return int32(rpccode.Code_INTERNAL)
 	case 501:
 		return int32(rpccode.Code_UNIMPLEMENTED)

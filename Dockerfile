@@ -1,4 +1,4 @@
-FROM golang:1.13-alpine as builder
+FROM golang:1.17-alpine as builder
 
 WORKDIR /app
 
@@ -8,10 +8,12 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o emulator .
+ENV CGO_ENABLED=0
+
+RUN go build -o emulator ./cmd/emulator
 
 
-FROM alpine:latest
+FROM gcr.io/distroless/static
 
 LABEL org.opencontainers.image.source=https://github.com/aertje/cloud-tasks-emulator
 

@@ -1,4 +1,4 @@
-package main
+package emulator
 
 import (
 	"crypto/rsa"
@@ -89,7 +89,6 @@ func createOIDCToken(serviceAccountEmail string, handlerUrl string) string {
 	token.Header["kid"] = OpenIDConfig.KeyID
 
 	tokenString, err := token.SignedString(OpenIDConfig.PrivateKey)
-
 	if err != nil {
 		log.Fatalf("Failed to create OIDC token: %v", err)
 	}

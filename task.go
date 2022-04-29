@@ -1,4 +1,4 @@
-package main
+package emulator
 
 import (
 	"bytes"
@@ -150,7 +150,6 @@ func setInitialTaskState(taskState *tasks.Task, queueName string) {
 			}
 
 			hostURL, err := url.Parse(host)
-
 			if err != nil {
 				panic(err)
 			}

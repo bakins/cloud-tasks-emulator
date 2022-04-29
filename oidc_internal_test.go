@@ -1,4 +1,4 @@
-package main
+package emulator
 
 import (
 	"context"
@@ -151,5 +151,4 @@ func performRequest(method string, url string, handler func(w http.ResponseWrite
 	http.HandlerFunc(handler).ServeHTTP(resp, req)
 
 	return resp
-
 }

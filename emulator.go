@@ -1,4 +1,4 @@
-package main
+package emulator
 
 import (
 	"context"
@@ -259,7 +259,6 @@ func (s *Server) GetTask(ctx context.Context, in *tasks.GetTaskRequest) (*tasks.
 
 // CreateTask creates a new task
 func (s *Server) CreateTask(ctx context.Context, in *tasks.CreateTaskRequest) (*tasks.Task, error) {
-
 	queueName := in.GetParent()
 	queue, ok := s.fetchQueue(queueName)
 	if !ok {
@@ -357,7 +356,7 @@ func createInitialQueue(emulatorServer *Server, name string) {
 	}
 }
 
-func main() {
+func Run() {
 	var initialQueues arrayFlags
 
 	host := flag.String("host", "localhost", "The host name")
@@ -394,4 +393,38 @@ func main() {
 	}
 
 	grpcServer.Serve(lis)
+}
+
+type TestServer struct {
+	listener net.Listener
+	server   *grpc.Server
+}
+
+func NewTestServer() *TestServer {
+	lis, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		panic(err)
+	}
+	grpcServer := grpc.NewServer()
+	emulatorServer := NewServer()
+
+	tasks.RegisterCloudTasksServer(grpcServer, emulatorServer)
+
+	s := TestServer{
+		listener: lis,
+		server:   grpcServer,
+	}
+
+	go grpcServer.Serve(lis)
+
+	return &s
+}
+
+func (s *TestServer) Close() {
+	s.server.GracefulStop()
+	_ = s.listener.Close()
+}
+
+func (s *TestServer) Address() string {
+	return s.listener.Addr().String()
 }
