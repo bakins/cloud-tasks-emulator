@@ -158,7 +158,6 @@ func getUnverifiedIssuerFromJWT(tokenStr string) string {
 }
 
 func parseOpenIDConnectToken(tokenStr string, keySet *jwk.Set) (*jwt.Token, *OpenIDConnectClaims) {
-
 	token, err := new(jwt.Parser).ParseWithClaims(
 		tokenStr,
 		&OpenIDConnectClaims{},
