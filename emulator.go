@@ -394,37 +394,3 @@ func Run() {
 
 	grpcServer.Serve(lis)
 }
-
-type TestServer struct {
-	listener net.Listener
-	server   *grpc.Server
-}
-
-func NewTestServer() *TestServer {
-	lis, err := net.Listen("tcp", "127.0.0.1:0")
-	if err != nil {
-		panic(err)
-	}
-	grpcServer := grpc.NewServer()
-	emulatorServer := NewServer()
-
-	tasks.RegisterCloudTasksServer(grpcServer, emulatorServer)
-
-	s := TestServer{
-		listener: lis,
-		server:   grpcServer,
-	}
-
-	go grpcServer.Serve(lis)
-
-	return &s
-}
-
-func (s *TestServer) Close() {
-	s.server.GracefulStop()
-	_ = s.listener.Close()
-}
-
-func (s *TestServer) Address() string {
-	return s.listener.Addr().String()
-}
